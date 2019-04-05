@@ -5,11 +5,8 @@ import io.grpc.ManagedChannelBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import site.jongin.coffeegrpc.domain.Coffee
 import site.jongin.coffeegrpc.proto.CoffeeGrpc
 import site.jongin.coffeegrpc.proto.CoffeeRequest
 import site.jongin.coffeegrpc.proto.CoffeeStatus
@@ -33,7 +30,7 @@ class CoffeeServiceTest {
 
         val response = stub.getCoffeeAll(request)
 
-        response.coffeeResponseList.forEach{
+        response.coffeeResponseList.forEach {
             println(it)
         }
     }

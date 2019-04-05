@@ -15,21 +15,14 @@ class CoffeeUtils(
 ) {
 
     fun getCoffeeAll(): MutableList<CoffeeResponse> {
-        var coffees = this.coffeeRepository.findAll()
-
-        var coffeeResponseList: MutableList<CoffeeResponse> = mutableListOf()
-        coffees.forEach{ coffee ->
-            coffeeResponseList.add(
-                CoffeeResponse.newBuilder()
-                    .setId(coffee.id!!)
-                    .setMenu(coffee.menu)
-                    .setPrice(coffee.price)
-                    .setCoffeeStatus(coffee.coffeeStatus)
-                    .build()
-            )
-        }
-
-        return coffeeResponseList
+        return this.coffeeRepository.findAll().map {
+            CoffeeResponse.newBuilder()
+                .setId(it.id!!)
+                .setMenu(it.menu)
+                .setPrice(it.price)
+                .setCoffeeStatus(it.coffeeStatus)
+                .build()
+        }.toMutableList()
     }
 
     fun getCoffee(id: Long): CoffeeResponse {
