@@ -8,6 +8,7 @@ import site.jongin.coffeegrpc.proto.CoffeeRequest
 import site.jongin.coffeegrpc.proto.CoffeeResponse
 import site.jongin.coffeegrpc.proto.CoffeeStatus
 import site.jongin.coffeegrpc.proto.CoffeeUpdateRequest
+import javax.persistence.EntityNotFoundException
 
 @Component
 class CoffeeUtils(
@@ -15,21 +16,14 @@ class CoffeeUtils(
 ) {
 
     fun getCoffeeAll(): MutableList<CoffeeResponse> {
-        var coffees = this.coffeeRepository.findAll()
-
-        var coffeeResponseList: MutableList<CoffeeResponse> = mutableListOf()
-        coffees.forEach{ coffee ->
-            coffeeResponseList.add(
-                CoffeeResponse.newBuilder()
-                    .setId(coffee.id!!)
-                    .setMenu(coffee.menu)
-                    .setPrice(coffee.price)
-                    .setCoffeeStatus(coffee.coffeeStatus)
-                    .build()
-            )
-        }
-
-        return coffeeResponseList
+        return this.coffeeRepository.findAll().map {
+            CoffeeResponse.newBuilder()
+                .setId(it.id!!)
+                .setMenu(it.menu)
+                .setPrice(it.price)
+                .setCoffeeStatus(it.coffeeStatus)
+                .build()
+        }.toMutableList()
     }
 
     fun getCoffee(id: Long): CoffeeResponse {
@@ -53,7 +47,10 @@ class CoffeeUtils(
     }
 
     fun updateCoffee(coffeeUpdateRequest: CoffeeUpdateRequest): Long? {
-        val coffee: Coffee = this.coffeeRepository.getOne(coffeeUpdateRequest.id)
+        val coffee: Coffee = this.coffeeRepository.findById(coffeeUpdateRequest.id).orElseThrow {
+            EntityNotFoundException("없는 커피")
+        }
+
         coffee.update(
             CoffeeRequestBody(
                 status = coffeeUpdateRequest.coffeeStatus.name,
