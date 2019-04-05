@@ -8,6 +8,7 @@ import site.jongin.coffeegrpc.proto.CoffeeRequest
 import site.jongin.coffeegrpc.proto.CoffeeResponse
 import site.jongin.coffeegrpc.proto.CoffeeStatus
 import site.jongin.coffeegrpc.proto.CoffeeUpdateRequest
+import javax.persistence.EntityNotFoundException
 
 @Component
 class CoffeeUtils(
@@ -46,7 +47,10 @@ class CoffeeUtils(
     }
 
     fun updateCoffee(coffeeUpdateRequest: CoffeeUpdateRequest): Long? {
-        val coffee: Coffee = this.coffeeRepository.getOne(coffeeUpdateRequest.id)
+        val coffee: Coffee = this.coffeeRepository.findById(coffeeUpdateRequest.id).orElseThrow {
+            EntityNotFoundException("없는 커피")
+        }
+
         coffee.update(
             CoffeeRequestBody(
                 status = coffeeUpdateRequest.coffeeStatus.name,
