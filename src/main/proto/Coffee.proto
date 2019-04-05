@@ -1,0 +1,53 @@
+// Coffee.proto
+syntax = "proto3"; // proto 문법 버전 설정
+
+option java_multiple_files = true;
+option java_package = "site.jongin.coffeegrpc.proto";
+option java_outer_classname = "CoffeeProto"; //
+
+package proto.coffee;
+
+enum CoffeeStatus {
+    INACTIVE = 0;
+    ACTIVE = 1;
+}
+
+message CoffeeeSearchRequest {
+    int64 id = 1;
+}
+
+message CoffeeRequest {
+    int32 price = 1;
+    string menu = 2;
+}
+
+message CoffeeUpdateRequest {
+    int64 id = 1;
+    CoffeeStatus coffeeStatus = 2;
+    int32 price = 3;
+    string menu = 4;
+}
+
+message CoffeeResponse {
+    int64 id = 1;
+    CoffeeStatus coffeeStatus = 2;
+    int32 price = 3;
+    string menu = 4;
+}
+
+message CoffeesListResponse {
+    repeated CoffeeResponse coffeeResponse = 1;
+}
+
+message CoffeeResultResponse {
+    bool is_success = 1;
+    int64 id = 2;
+}
+
+import "google/protobuf/empty.proto";
+service Coffee {
+    rpc getCoffeeAll (google.protobuf.Empty) returns (CoffeesListResponse) {};
+    rpc getCoffee (CoffeeeSearchRequest) returns (CoffeeResponse) {};
+    rpc addCoffee (CoffeeRequest) returns (CoffeeResultResponse) {};
+    rpc updateCoffee (CoffeeUpdateRequest) returns (CoffeeResultResponse) {};
+}

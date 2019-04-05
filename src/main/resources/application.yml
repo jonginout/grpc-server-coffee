@@ -1,0 +1,10 @@
+spring.profiles.active: ${SPRING_PROFILES_ACTIVE:dev}
+
+spring.output.ansi.enabled: always
+
+grpc.port: 5959
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
